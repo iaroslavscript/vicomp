@@ -1,0 +1,706 @@
+:root {
+  --bg: #f5f7fa;
+  --card: #ffffff;
+  --text: #1c2430;
+  --muted: #5d6b7c;
+  --border: #d8dee6;
+  --accent: #1e3a5f;
+  --sea: #cfe3f3;
+  --land: #e9e4d4;
+  --land-stroke: #b9b19a;
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif,
+    'Apple Color Emoji',
+    'Segoe UI Emoji',
+    'Noto Color Emoji';
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.5;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #11161d;
+    --card: #1a212b;
+    --text: #e6ebf1;
+    --muted: #9aa8b8;
+    --border: #2d3846;
+    --accent: #8fb8e8;
+    --sea: #1d3247;
+    --land: #3a3f37;
+    --land-stroke: #5b6152;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  margin: 0 auto;
+  max-width: 960px;
+  padding: 1rem;
+}
+
+h1,
+h2 {
+  margin: 0;
+  line-height: 1.2;
+}
+
+h2 {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+
+.app-header {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.app-header h1 {
+  font-size: 1.4rem;
+  color: var(--accent);
+}
+
+.tagline {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+main {
+  display: grid;
+  gap: 1rem;
+}
+
+#results {
+  display: grid;
+  gap: 1rem;
+}
+
+/* Grid items default to min-width: auto, which lets wide content (tabs, map) overflow small screens. */
+main > *,
+#results > * {
+  min-width: 0;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.input-card label[for='input'] {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.input-wrap {
+  position: relative;
+  --pad-right: 5.5rem;
+}
+
+/*
+ * The textarea is transparent and sits on a copy of its text that is laid out identically;
+ * marks in the copy highlight chunks of the value, as a textarea cannot style its own text.
+ */
+textarea,
+.input-backdrop {
+  display: block;
+  width: 100%;
+  font: 1.1rem/1.4 ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-variant-ligatures: none;
+  letter-spacing: normal;
+  tab-size: 8;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  word-break: normal;
+  padding: 0.7rem var(--pad-right) 0.7rem 0.7rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+textarea {
+  position: relative;
+  min-height: 3rem;
+  max-height: 40vh;
+  background: transparent;
+  color: var(--text);
+  resize: none;
+  overflow-y: auto;
+}
+
+.input-backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-color: transparent;
+  /* Matches the textarea's text width while it shows a scrollbar; --gutter is set from script. */
+  padding-right: calc(var(--pad-right) + var(--gutter, 0px));
+  background: var(--bg);
+  color: transparent;
+  pointer-events: none;
+}
+
+.input-backdrop mark {
+  color: transparent;
+  background: none;
+  border-radius: 3px;
+}
+
+.chunks-mode .input-backdrop mark.odd {
+  background: color-mix(in srgb, var(--muted) 18%, transparent);
+}
+
+.chunks-mode .input-backdrop mark.active {
+  background: color-mix(in srgb, var(--tile) 45%, transparent);
+  box-shadow: inset 0 -3px var(--tile);
+}
+
+.input-actions {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.45rem;
+  display: flex;
+  gap: 0.25rem;
+}
+
+button.icon {
+  width: 2.1rem;
+  height: 2.1rem;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  background: var(--card);
+}
+
+button.link {
+  border: none;
+  background: none;
+  padding: 0.2rem 0;
+  color: var(--accent);
+}
+
+button.link:hover {
+  text-decoration: underline;
+}
+
+.input-footer {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-top: 0.4rem;
+}
+
+.input-footer .meta {
+  flex: 1;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  margin-top: 0.6rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--border);
+}
+
+.controls .hint {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+.controls .check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+}
+
+.controls .check input {
+  width: 1.1rem;
+  height: 1.1rem;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+select,
+button {
+  font: inherit;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text);
+}
+
+button {
+  cursor: pointer;
+}
+
+button:hover {
+  border-color: var(--accent);
+}
+
+.meta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  min-height: 1.35em;
+}
+
+/* Always one row of 8, so the strip reads the same on every screen. */
+.tiles {
+  container-type: inline-size;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 4rem));
+  gap: clamp(0.2rem, 1.2cqi, 0.5rem);
+}
+
+.tiles .tile {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  font-size: min(2.3rem, 7cqi);
+  border-radius: clamp(6px, 2cqi, 12px);
+}
+
+.tile {
+  display: inline-grid;
+  place-items: center;
+  width: 3.4rem;
+  height: 3.4rem;
+  font-size: 2rem;
+  border-radius: 10px;
+  background: var(--tile);
+  border: 2px solid rgb(0 0 0 / 0.15);
+  /* Light halo keeps the emoji readable on a tile of the same hue (maple leaf on red, sun on yellow). */
+  text-shadow:
+    0 0 1px #fff,
+    0 0 2px #fff,
+    0 0 4px rgb(255 255 255 / 0.8);
+}
+
+.tile.small {
+  width: 2.4rem;
+  height: 2.4rem;
+  font-size: 1.4rem;
+  border-radius: 8px;
+}
+
+.hero .words {
+  margin: 0.75rem 0 0;
+}
+
+.hero-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+button.icon.quiet {
+  width: 1.9rem;
+  height: 1.9rem;
+  margin: -0.3rem -0.3rem 0 0;
+  border-color: color-mix(in srgb, var(--muted) 55%, transparent);
+  background: var(--bg);
+  font-size: 0.9rem;
+}
+
+button.icon.quiet:hover,
+button.icon.quiet:focus-visible {
+  border-color: var(--accent);
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.75rem;
+}
+
+.views {
+  padding-top: 0.25rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1rem;
+}
+
+.tabs [role='tab'] {
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  background: none;
+  padding: 0.6rem 0.75rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.tabs [role='tab'][aria-selected='true'] {
+  color: var(--text);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}
+
+.tabs [role='tab']:hover {
+  color: var(--text);
+}
+
+@media (max-width: 480px) {
+  .tabs [role='tab'] {
+    padding-inline: 0.35rem;
+    font-size: 0.9rem;
+  }
+}
+
+.journey {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+@media (max-width: 720px) {
+  .journey {
+    grid-template-columns: 1fr;
+  }
+}
+
+.legs {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.15rem;
+  font-size: 0.95rem;
+}
+
+.leg-row {
+  display: grid;
+  grid-template-columns: 1.75rem 1fr auto;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.25rem 0.4rem;
+  border-radius: 6px;
+}
+
+.leg-row:nth-child(odd) {
+  background: var(--bg);
+}
+
+.leg-row .leg-emoji {
+  font-size: 1.25rem;
+  text-align: center;
+}
+
+.leg-row .border {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.km {
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.9rem;
+}
+
+.map {
+  cursor: zoom-in;
+}
+
+.map-frame {
+  position: relative;
+}
+
+/* The frame is pinned to the viewport so the whole map, minimap included, always fits on screen. */
+.map.expanded {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgb(0 0 0 / 0.7);
+  cursor: zoom-out;
+}
+
+.map.expanded .map-frame {
+  position: absolute;
+  inset: 1rem;
+}
+
+.map.expanded .map-main {
+  height: 100%;
+  aspect-ratio: auto;
+}
+
+@media (max-width: 480px) {
+  .map.expanded .map-frame {
+    inset: 0.5rem;
+  }
+}
+
+body.no-scroll {
+  overflow: hidden;
+}
+
+.map-main {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.map-toggle {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  z-index: 1;
+  font-size: 1.1rem;
+  opacity: 0.85;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.25);
+}
+
+.map-toggle:hover,
+.map.expanded .map-toggle {
+  opacity: 1;
+}
+
+/* A light mat, a dark rule and a shadow keep the inset visibly separate from the main map in both themes. */
+.map-overview {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  width: 28%;
+  max-width: 200px;
+  border: 2px solid var(--card);
+  outline: 1.5px solid var(--text);
+  border-radius: 4px;
+  background: var(--sea);
+  box-shadow: 0 2px 10px rgb(0 0 0 / 0.45);
+}
+
+.map-overview[data-corner='bl'] {
+  right: auto;
+  left: 0.5rem;
+}
+
+.map-overview[data-corner='tl'] {
+  right: auto;
+  bottom: auto;
+  left: 0.5rem;
+  top: 0.5rem;
+}
+
+.map.expanded .map-overview {
+  width: clamp(130px, 24%, 280px);
+  max-width: none;
+}
+
+.sea {
+  fill: var(--sea);
+}
+
+.land,
+.land use {
+  fill: var(--land);
+  stroke: var(--land-stroke);
+  stroke-width: 0.6px;
+  vector-effect: non-scaling-stroke;
+}
+
+.map-overview-box {
+  fill: rgb(229 57 53 / 0.25);
+  stroke: #e53935;
+  stroke-width: 1.5px;
+  vector-effect: non-scaling-stroke;
+}
+
+.leg {
+  stroke-width: 3px;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.stop {
+  fill: #fff;
+  stroke: var(--accent);
+  stroke-width: 2px;
+  vector-effect: non-scaling-stroke;
+}
+
+.stop.start {
+  fill: #43a047;
+}
+
+.stop.end {
+  fill: #e53935;
+}
+
+.leg-emoji {
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.leaders line {
+  stroke: var(--muted);
+}
+
+.stop-label {
+  fill: var(--text);
+  paint-order: stroke;
+  stroke: var(--card);
+  stroke-linejoin: round;
+  font-weight: 600;
+}
+
+.words {
+  font: 600 1.4rem/1.4 ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  margin: 0;
+  word-spacing: 0.2em;
+}
+
+.hint {
+  color: var(--muted);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.panel-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.panel-bar .hint {
+  flex: 1 1 20rem;
+}
+
+.chunks {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+  gap: 0.4rem;
+}
+
+.chunk {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 0.4rem;
+  align-items: center;
+  padding: 0.3rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: none;
+  text-align: start;
+  /* Keeps an item scrolled into view clear of the sticky input above it. */
+  scroll-margin: calc(var(--sticky-height, 0px) + 0.5rem) 0 0.5rem;
+}
+
+.chunk.caret {
+  border-color: var(--accent);
+  border-style: dashed;
+}
+
+.chunk.active {
+  background: color-mix(in srgb, var(--tile) 25%, transparent);
+  border-color: var(--tile);
+}
+
+.chunk[aria-pressed='true'] {
+  border-style: solid;
+  box-shadow: 0 0 0 2px var(--tile);
+}
+
+.chunk .tile {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
+.chunk-pos {
+  grid-column: 2;
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+.chunk-word {
+  grid-column: 2;
+  font-family: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  font-size: 0.85rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* While finding the difference, the value stays in sight above the chunks it is split into. */
+@media (min-height: 520px) {
+  .chunks-mode .input-card {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    box-shadow: 0 6px 16px rgb(0 0 0 / 0.12);
+  }
+
+  .chunks-mode textarea {
+    max-height: 25vh;
+  }
+}
+
+#tab-chunks {
+  scroll-margin-top: calc(var(--sticky-height, 0px) + 0.5rem);
+}
+
+.details {
+  margin: 0;
+}
+
+.details dt {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.details dd {
+  margin: 0 0 0.5rem;
+}
+
+.details code {
+  word-break: break-all;
+}
+
+.empty ol {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.app-footer {
+  margin-top: 1.5rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.app-footer a {
+  color: inherit;
+}
