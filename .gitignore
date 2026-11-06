@@ -1,0 +1,22 @@
+node_modules/
+dist/
+*.log
+
+# V8 profiles from `npm run bench:profile`.
+.cpuprofile/
+*.cpuprofile
+
+# Test output from 'playwright test'.
+test-results/
+playwright-report/
+blob-report/
+.playwright/
+*.tsbuildinfo
+
+
+# Temporary files
+tmp/
+
+# MITM proxy SSL
+ProxyCerts/
+**/ProxyCerts/

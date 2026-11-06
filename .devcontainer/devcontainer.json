@@ -1,0 +1,39 @@
+{
+  "name": "Vicomp: visual compare",
+  "userEnvProbe": "loginShell",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "..",
+    "options": ["--network=host"]
+  },
+  "remoteUser": "root",
+  "containerUser": "root",
+  "updateRemoteUserUID": false,
+  "containerEnv": {
+    "PLAYWRIGHT_BROWSERS_PATH": "/root/ms-playwright"
+  },
+  "forwardPorts": [4173,5173],
+  "postCreateCommand": "pnpm install --frozen-lockfile --offline; pnpm exec playwright install chromium firefox webkit",
+  
+  "customizations": {
+    "vscode": {
+      "chat.agent.sandbox.enabled": "off",
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-playwright.playwright"
+      ],
+      "settings": {
+        //"files.exclude": {
+        //  "**/node_modules": true
+        //},
+        "search.exclude": {
+          "**/node_modules": true
+        },
+        "files.watcherExclude": {
+          "**/node_modules/**": true
+        }
+      }
+    }
+  }
+}

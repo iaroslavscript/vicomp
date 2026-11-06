@@ -1,0 +1,8 @@
+packages:
+
+storeDir: "${HOME}/.local/share/pnpm/store"
+#packageImportMethod: copy
+
+overrides:
+  # GHSA-3g3m-2fjr-6pw4: workbox-build@7.4.1 pins glob ^11, no patched 11.x exists
+  glob: ^14.0.2
