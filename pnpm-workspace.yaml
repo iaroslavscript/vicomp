@@ -1,0 +1,4 @@
+packages:
+
+storeDir: "${HOME}/.local/share/pnpm/store"
+#packageImportMethod: copy

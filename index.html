@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Compare IBANs, hashes, keys and other codes across computers by eye: each value becomes a unique travel story, emoji strip, map and word code." />
+    <meta name="color-scheme" content="light dark" />
+    <title>Vicomp: visual compare</title>
+  </head>
+  <body>
+    <header class="app-header">
+      <img src="/logo.svg" alt="" width="36" height="36" />
+      <div>
+        <h1>Vicomp</h1>
+        <p class="tagline">Compare long codes by eye, not symbol by symbol.</p>
+      </div>
+    </header>
+
+    <main>
+      <section class="card input-card" aria-labelledby="input-label">
+        <label id="input-label" for="input">Value to compare</label>
+        <div class="input-wrap">
+          <div id="input-backdrop" class="input-backdrop" aria-hidden="true"></div>
+          <textarea
+            id="input"
+            rows="1"
+            spellcheck="false"
+            autocomplete="off"
+            autocapitalize="off"
+            autocorrect="off"
+            placeholder="Paste an IBAN, hash, key, serial number…"
+          ></textarea>
+          <div class="input-actions">
+            <button type="button" id="paste" class="icon" title="Paste" aria-label="Paste">📋</button>
+            <button type="button" id="clear" class="icon" title="Clear" aria-label="Clear" hidden>✖</button>
+          </div>
+        </div>
+        <div class="input-footer">
+          <p id="meta" class="meta" aria-live="polite"></p>
+          <button type="button" id="options-toggle" class="link" aria-expanded="false" aria-controls="options">
+            ⚙ Options
+          </button>
+        </div>
+        <div id="options" class="controls" hidden>
+          <label>
+            Normalize
+            <select id="mode"></select>
+          </label>
+          <label class="check" title="Mixes today's UTC date into the result, so it changes every day. Both computers must enable it.">
+            <input type="checkbox" id="use-date" autocomplete="off" />
+            Include today's date (UTC)
+          </label>
+          <p class="hint">Both computers must use the same options — they are part of the result.</p>
+        </div>
+      </section>
+
+      <section id="empty" class="card empty">
+        <h2>How it works</h2>
+        <ol>
+          <li>Open Vicomp on both computers.</li>
+          <li>Paste the value on each, with the same options.</li>
+          <li>Compare the pictures — one changed symbol changes all of them.</li>
+        </ol>
+      </section>
+
+      <section id="results" hidden>
+        <article class="card hero" aria-labelledby="hero-title">
+          <div class="hero-head">
+            <h2 id="hero-title">Fingerprint</h2>
+            <button type="button" id="copy" class="icon quiet" title="Copy as text" aria-label="Copy as text">📄</button>
+          </div>
+          <div id="tiles" class="tiles" role="img"></div>
+          <p id="words" class="words"></p>
+          <div class="hero-actions">
+            <button type="button" id="find-diff" class="link">They don't match? Find the difference →</button>
+          </div>
+        </article>
+
+        <article class="card views">
+          <div class="tabs" role="tablist" aria-label="More views">
+            <button type="button" role="tab" id="tab-journey" aria-controls="panel-journey" aria-selected="true">
+              🗺️ Journey
+            </button>
+            <button type="button" role="tab" id="tab-chunks" aria-controls="panel-chunks" aria-selected="false" tabindex="-1">
+              🔍 Difference
+            </button>
+            <button type="button" role="tab" id="tab-details" aria-controls="panel-details" aria-selected="false" tabindex="-1">
+              ℹ️ Details
+            </button>
+          </div>
+
+          <div id="panel-journey" class="panel journey" role="tabpanel" aria-labelledby="tab-journey">
+            <div id="map" class="map">
+              <div id="map-frame" class="map-frame">
+                <button type="button" id="map-toggle" class="icon map-toggle" aria-label="Enlarge map" title="Enlarge map"
+                  aria-expanded="false">⤢</button>
+              </div>
+            </div>
+            <ol id="legs" class="legs"></ol>
+          </div>
+
+          <div id="panel-chunks" class="panel" role="tabpanel" aria-labelledby="tab-chunks" hidden>
+            <div class="panel-bar">
+              <p class="hint">Each chunk gets its own symbol. The first cell that differs between the computers shows where
+                the values differ. Point at or click a cell to highlight its characters in the value.</p>
+              <label>
+                Chunk size
+                <select id="chunk-size"></select>
+              </label>
+            </div>
+            <div id="chunks" class="chunks"></div>
+          </div>
+
+          <div id="panel-details" class="panel" role="tabpanel" aria-labelledby="tab-details" hidden>
+            <dl class="details">
+              <dt>Normalized value</dt>
+              <dd><code id="normalized"></code></dd>
+              <dt>SHA-256 of normalized value</dt>
+              <dd><code id="sha"></code></dd>
+              <dt>Mixed into the result</dt>
+              <dd><code id="context"></code></dd>
+            </dl>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p>🔒 Everything runs in your browser. Nothing you type is sent anywhere or saved.</p>
+      <p>
+        App <span id="app-version"></span> · algorithm <span id="version"></span>. Data: cities &amp; countries ©
+        <a href="https://www.geonames.org/" rel="noopener">GeoNames</a> (CC BY 4.0), land outlines
+        <a href="https://www.naturalearthdata.com/" rel="noopener">Natural Earth</a> (public domain), words
+        <a href="https://github.com/bitcoin/bips/blob/master/bip-0039/english.txt" rel="noopener">BIP39</a> (MIT).
+      </p>
+      <p>
+        © 2026 <a href="https://github.com/iaroslavscript" rel="author noopener">Iaroslav Akimov</a> ·
+        <a href="https://opensource.org/license/mit" rel="license noopener">MIT License</a> · Built with GitHub Copilot
+      </p>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

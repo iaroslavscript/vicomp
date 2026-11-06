@@ -1,0 +1,31 @@
+# To make Dependabot works:
+#
+# 1. Enable the dependency graph under Settings → Code security; the PR check needs it.
+#    If the repo is private, the PR check also requires GitHub Advanced Security.
+# 2. Turn on Dependabot alerts and security updates on the same page if you also want
+#    vulnerability-driven PRs.
+# 3. Watch the first Dependabot PRs. If Dependabot doesn't yet handle pnpm 12 well,
+#    they may leave pnpm-lock.yaml out of date.
+
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    groups:
+      dev-dependencies:
+        dependency-type: "development"
+        update-types: ["minor", "patch"]
+      production-dependencies:
+        dependency-type: "production"
+        update-types: ["minor", "patch"]
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      github-actions:
+        patterns: ["*"]
